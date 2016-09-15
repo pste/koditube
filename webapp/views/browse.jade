@@ -19,11 +19,13 @@
         div(style="height:120px; background: url('{{item.thumb}}') center center no-repeat")
     .col-xs-6.title
       h4 {{item.title}}
-    .col-xs-2
-      span.label.label-warning {{item.source}}
     .col-xs-1
+      span.label.label-warning {{item.source}}
+    .col-xs-2
       button.btn.btn-default.ktpin(data-toggle="tooltip", title="click to select")
         span.fa.fa-thumb-tack
+      button.btn.btn-default.ktplay(data-toggle="tooltip", title="play")
+        span.fa.fa-play-circle(href="https://www.youtube.com/watch?v={{item.key}}")
   // {{/each}}
 
 // TAGS DIALOG
