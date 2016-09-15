@@ -1,0 +1,36 @@
+.container.searchbox
+  .input-group
+    input.form-control(type="text", placeholder="search")
+    .input-group-btn
+      button.btn.btn-default
+        span.fa.fa-search
+
+.container
+  nav
+    ul.pagination.hidden
+      // {{#each . as |page|}}
+      li.page(href="{{page.href}}")
+        a(href="#") {{page.key}}
+      // {{/each}}
+
+#result.container.hidden
+  // {{#each . as |item|}}
+  .row(key="{{item.key}}")
+    .col-md-3
+     .thumbnail(thumb="{{item.thumb}}")
+        //img(src="{{item.thumb}}")
+        div(style="height:120px; background: url('{{item.thumb}}') center center no-repeat")
+    .col-md-6.title {{item.title}}
+    .col-md-2
+      button.btn.btn-default.ktplay(data-toggle="tooltip", title="play")
+        span.fa.fa-2x.fa-play-circle(href="{{item.href}}")
+      button.btn.btn-default.ktadd(data-toggle="tooltip", title="add to local db")
+        span.fa.fa-2x.fa-plus-square(key="{{item.key}}")
+  // {{/each}}
+
+// this will be cloned from the 1st
+.container
+  nav
+    ul.pagination
+    
+script(src="js/search.js")

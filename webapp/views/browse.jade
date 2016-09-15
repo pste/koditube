@@ -1,0 +1,59 @@
+.container
+  .panel.panel-default
+    .panel-heading
+      button.btn.btn-default#btndelete(data-toggle="tooltip", title="delete selected")
+        span.fa.fa-2x.fa-trash
+      button.btn.btn-default#btntags(data-toggle="tooltip", title="tag selected")
+        span.fa.fa-2x.fa-tags
+    .panel-body#tags.hidden
+      span Choose a Tag
+      // {{#each . as |tag|}}
+      button.btn.btn-info.btn-xs.kttag(style="margin-left:5px", key="{{tag}}") {{tag}}
+      // {{/each}}
+        
+#result.container.hidden
+  // {{#each . as |item|}}
+  .row(key="{{item.key}}")
+    .col-sm-3
+      .thumbnail
+        div(style="height:120px; background: url('{{item.thumb}}') center center no-repeat")
+    .col-xs-6.title
+      h4 {{item.title}}
+    .col-xs-2
+      span.label.label-warning {{item.source}}
+    .col-xs-1
+      button.btn.btn-default.ktpin(data-toggle="tooltip", title="click to select")
+        span.fa.fa-thumb-tack
+  // {{/each}}
+
+// TAGS DIALOG
+.modal#kttags-dlg
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(data-dismiss="modal")
+          span &times;
+        .modal-title
+          h5 Tag selected items ...
+      .modal-body
+        .input-group
+          input.form-control#kttags-txt(type="text", placeholder="tags")
+          .input-group-btn
+            button.btn.btn-default.kttags
+              span.fa.fa-floppy-o
+
+// REMOVE DIALOG
+.modal#areyousure
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(data-dismiss="modal")
+          span &times;
+        .modal-title
+          h5 Are you sure?
+      .modal-body
+        .container
+          button.btn.btn-default.ktrm
+            span.fa.fa-trash-o
+      
+script(src="js/browse.js")

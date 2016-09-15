@@ -1,0 +1,23 @@
+doctype html
+html
+  head
+    title koditube
+    
+    script(src="libs/js/jquery-2.2.4.min.js")
+    link(rel="stylesheet", href="libs/bootstrap-3.3.6-dist/css/bootstrap.min.css")
+    script(src="libs/bootstrap-3.3.6-dist/js/bootstrap.min.js")
+    link(rel="stylesheet", href="libs/font-awesome-4.6.3/css/font-awesome.min.css")
+    script(src="libs/js/handlebars-v4.0.5.js")
+    script(src="js/main.js")
+    style(type="text/css").
+      body {
+        background-color: #ddd;
+        padding-top: 70px;
+      }
+      .hidden {
+        display: none;
+      }
+
+  body
+    include ./navbar.jade
+    main

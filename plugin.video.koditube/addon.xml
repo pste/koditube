@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="plugin.video.koditube" name="koditube" version="1.0.0" provider-name="pirraste">
+  <requires>
+    <import addon="xbmc.python" 		version="2.24.0"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="addon.py">
+    <provides>video</provides>
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary lang="en">Video plugin to communicate with a koditube (Node.js) web app.</summary>
+    <description lang="en">The plugin can render a video list from json (provided by the web app), then can stream the video from youtube to kodi.</description>
+    <disclaimer lang="en"></disclaimer>
+    <language></language>
+    <platform>all</platform>
+    <license>GNU GPLv2</license>
+    <forum></forum>
+    <website></website>
+    <email></email>
+    <source>TODO (github)</source>
+  </extension>
+</addon>

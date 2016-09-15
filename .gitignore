@@ -1,0 +1,8 @@
+*.key
+*.keys
+*.bat
+*.sh
+*.db
+node_modules/
+/stuff/
+/miniapi/

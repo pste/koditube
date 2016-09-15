@@ -1,0 +1,31 @@
+{
+  "name": "koditube",
+  "version": "1.0.0",
+  "description": "This is the web app that koditube uses to stream youtube videos. It's a web app that allows to search videos on youtube, store their info in a local db, tag them (useful for kodi navigation) and stream to an enabled kido server.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"(TODO) Error: no test specified\" && exit 1"
+  },
+  "config": {
+    "port": 4006,
+    "debug": "true"
+  },
+  "author": "pirraste",
+  "license": "MIT",
+  "repository" : {
+    "type": "git",
+    "url": "https://github.com/npm/npm.git"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "colors": "^1.1.2",
+    "express": "^4.14.0",
+    "jade": "^1.11.0",
+    "jsdom": "^9.2.1",
+    "nedb": "^1.8.0",
+    "querystring": "^0.2.0",
+    "request": "^2.72.0",
+    "youtube.get-video-info": "^1.0.0"
+  }
+}
