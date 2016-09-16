@@ -21,15 +21,21 @@ If you prefer, you can change the koditube url to a custom url (i.e. you can hos
 
 ## Installation
 
-You can build a simple bash script to update the whole thing  ... something like: 
+You can build a simple bash script to update the whole thing  ... I've made a deploy.sh this way: 
 ```
 #!/bin/bash
+
 # download latest version
+rm -rf koditube
 git clone https://github.com/pste/koditube.git
+
 # update the plugin (don't remove old stuff or you'll lose the db)
 cp -r koditube/plugin.video.koditube /home/osmc/.kodi/addons/
+
 # start the webapp (I'm actually using PM2 to keep it up - WARNING: PM2 doesn't take your package.json parameters)
 pushd koditube/webapp
+pm2 stop koditube
 pm2 start -name koditube app.js
 popd
+
 ```
