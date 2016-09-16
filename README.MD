@@ -18,3 +18,18 @@ The 2nd part of the project is the plugin: it basically connects to http://local
 Inside each folder there are its videos. The play button will start streaming the youtube stuff into your kodi.
 
 If you prefer, you can change the koditube url to a custom url (i.e. you can host the web app in the cloud, then make your kodi point to your public url)
+
+## Installation
+
+You can build a simple bash script to update the whole thing  ... something like: 
+```
+#!/bin/bash
+# download latest version
+git clone https://github.com/pste/koditube.git
+# update the plugin (don't remove old stuff or you'll lose the db)
+cp -r koditube/plugin.video.koditube /home/osmc/.kodi/addons/
+# start the webapp (I'm actually using PM2 to keep it up - WARNING: PM2 doesn't take your package.json parameters)
+pushd koditube/webapp
+pm2 start -name koditube app.js
+popd
+```
