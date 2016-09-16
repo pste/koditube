@@ -20,7 +20,10 @@
     .col-xs-6.title
       h4 {{item.title}}
     .col-xs-1
-      span.label.label-warning {{item.source}}
+      span.source.label.label-warning {{item.source}}
+      // {{#each item.tags as |tag|}}
+      span.tag.label.label-info {{tag}}
+      // {{/each}}
     .col-xs-2
       button.btn.btn-default.ktpin(data-toggle="tooltip", title="click to select")
         span.fa.fa-thumb-tack

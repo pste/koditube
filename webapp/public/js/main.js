@@ -101,11 +101,15 @@ $(document).ready(function() {
   $('main').on('click', '.kttags', function() {
     var tag = $('#kttags-txt').val();
     var uri = '/api/db/save/';
-    var tags = [];
-    tags.push(tag);
     
     // adding
     onSelectedRows(function($row) {
+      var tags = [];
+      $row.find('.tag').each(function(i,o){
+        tags.push($(o).text());
+      });
+      tags.push(tag);
+      
       var item = {
         key: $row.attr('key'),
         tags: tags
