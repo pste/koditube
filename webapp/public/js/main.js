@@ -1,5 +1,3 @@
-var baseurl = 'http://localhost:4006';
-
 Handlebars.registerHelper('ifeq', function(v1, v2, options) {
   if(v1 == v2) {
     return options.fn(this);
@@ -88,7 +86,7 @@ $(document).ready(function() {
     $('#areyousure');
     
     onSelectedRows(function($row) {
-      var uri = baseurl + '/api/db/remove/';
+      var uri = '/api/db/remove/';
       var item = {
         "key": $row.attr('key')
       };
@@ -102,7 +100,7 @@ $(document).ready(function() {
   // (browse page) add to folder
   $('main').on('click', '.kttags', function() {
     var tag = $('#kttags-txt').val();
-    var uri = baseurl + '/api/db/save/';
+    var uri = '/api/db/save/';
     var tags = [];
     tags.push(tag);
     
@@ -137,7 +135,7 @@ $(document).ready(function() {
   $('main').on('click', '.ktadd', function() {
     var $elem = $(this).children('.fa');
     var $row = $elem.parents('.row').first();
-    var uri = baseurl + '/api/db/save/';
+    var uri = '/api/db/save/';
     var item = {
       "key": $elem.attr('key')
       , "title": $row.find('.title').text()

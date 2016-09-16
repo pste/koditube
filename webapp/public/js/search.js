@@ -22,7 +22,7 @@ function renderitems(data) {
 // do the search
 $('.searchbox .btn').on('click', function() {
   var search = $('.searchbox input[type="text"]').val();
-  var uri = baseurl + '/api/youtube/search/' + encodeURIComponent(search);
+  var uri = '/api/youtube/search/' + encodeURIComponent(search);
   
   fadeOut();
   $.get(uri, function(data) {
@@ -33,7 +33,7 @@ $('.searchbox .btn').on('click', function() {
 
 // page change
 $('nav').on('click', '.page', function() {
-  var uri = baseurl + '/api/youtube/pages/';
+  var uri = '/api/youtube/pages/';
   
   fadeOut();
   $.post(uri, { url: $(this).attr('href') }, function(data) {
