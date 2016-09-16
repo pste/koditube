@@ -30,7 +30,7 @@ var db = {
 var app;
 var web;
 
-var dbg = (process.env.npm_package_config_debug == 'true');
+var dbg = (process.argv.indexOf('--debug') >= 0); // node app.js --debug
 if (dbg) { // rebind debug function
   logs.debug = console.log.bind(console)
   logs.debug('^^^ DEBUG MODE ON  ...');
@@ -38,8 +38,12 @@ if (dbg) { // rebind debug function
 
 /* :::::::::::::::::::::::::::::::::::::::::::::: */
 
+var port = 80; // node app.js --port 4006
+if (process.argv.indexOf('--port') >= 0 && (process.argv.indexOf('--port')  +1 < process.argv.length))
+  port = process.argv.indexOf('--port') + 1;
+
 app = express();
-app.set('port', process.env.npm_package_config_port || 80);
+app.set('port', port);
 logs.debug('PARAMETER PORT: ', app.get('port'));
 
 // view engine setup
