@@ -39,8 +39,9 @@ if (dbg) { // rebind debug function
 /* :::::::::::::::::::::::::::::::::::::::::::::: */
 
 var port = 80; // node app.js --port 4006
-if (process.argv.indexOf('--port') >= 0 && (process.argv.indexOf('--port')  +1 < process.argv.length))
-  port = process.argv.indexOf('--port') + 1;
+var portidx = process.argv.indexOf('--port') + 1; // 0 is not found
+if (portidx > 0 && portidx < process.argv.length)
+  port = process.argv[portidx];
 
 app = express();
 app.set('port', port);
