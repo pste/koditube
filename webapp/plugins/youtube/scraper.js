@@ -3,7 +3,7 @@ var jsdom = require('jsdom');
 var util = require('util');
 var colors = require('colors');
 var fs = require('fs');
-var mold = require('./mold');
+var mold = require('../../mold');
 
 var youtube = 'https://www.youtube.com';
 

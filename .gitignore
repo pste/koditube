@@ -3,6 +3,7 @@
 *.bat
 *.sh
 *.db
+*.log
 node_modules/
 /stuff/
 /miniapi/

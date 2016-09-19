@@ -9,7 +9,7 @@
   },
   "author": "pirraste",
   "license": "MIT",
-  "repository" : {
+  "repository": {
     "type": "git",
     "url": "https://github.com/pste/koditube"
   },
@@ -17,6 +17,7 @@
     "body-parser": "^1.15.2",
     "colors": "^1.1.2",
     "express": "^4.14.0",
+    "helmet": "^2.2.0",
     "jade": "^1.11.0",
     "jsdom": "^9.2.1",
     "nedb": "^1.8.0",

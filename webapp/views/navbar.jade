@@ -12,8 +12,13 @@ nav.navbar.navbar-default.navbar-fixed-top
     div.collapse.navbar-collapse#navbar
       ul.nav.navbar-nav
         li
-          a#browse(href="#")
+          a.link(href="browse")
             span.menulabel local db
-        li
-          a#search(href="#")
+        // rendering one array as jade list:
+        for item in items
+          li
+            a.link(href="plugins/#{item}")
+              span.menulabel #{item}
+        //li
+          a.link(href="plugins/youtube")
             span.menulabel youtube.com

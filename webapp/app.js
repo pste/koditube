@@ -1,19 +1,22 @@
 var util = require('util');
+var fs = require('fs');
 var colors = require('colors');
 var path = require('path');
+
 var express = require('express');
 var request = require('request');
+var helmet = require('helmet');
+var pluginManager = require('./pluginManager');
+
 //var favicon = require('serve-favicon');
 //var cookieParser = require('cookie-parser');
+var jade = require('jade');
 var bodyParser = require('body-parser');
 
 // nedb datastore:
 var Datastore = require('nedb');
 
-//var routes = require('./server/routes');
-var mold = require('./mold');
-var videoinfo = require('youtube.get-video-info');
-var scraper = require('./scraper');
+//var mold = require('./mold');
 
 /* :: GLOBALS :::::::::::::::::::::::::::::::::::::::::::::: */
 
@@ -36,6 +39,8 @@ if (dbg) { // rebind debug function
   logs.debug('^^^ DEBUG MODE ON  ...');
 }
 
+var plugins = [];
+
 /* :::::::::::::::::::::::::::::::::::::::::::::: */
 
 var port = 80; // node app.js --port 4006
@@ -57,6 +62,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 //app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(helmet());
+
 if (dbg) {
   app.locals.pretty = true;
 }
@@ -64,49 +71,28 @@ if (dbg) {
 /* :: ROUTES (VIEWS) :::::::::::::::::::::::::::::::::::::::::::::: */
 
 app.get('/', (req, res) => {
-  res.render('main');
+  logs.debug(util.inspect(plugins));
+  res.render('main', {items: plugins});
 });
 
 app.get('/browse', (req, res) => {
   res.render('browse');
 });
 
-app.get('/search', (req, res) => {
-  res.render('search');
-});
-
 /* :: ROUTES (API) :::::::::::::::::::::::::::::::::::::::::::::: */
 
-// makes a search on youtube, then scrape the result as json and return the data to the caller
-app.get('/api/youtube/search/:keyword', (req, res) => {
-  var keyword = req.params.keyword;
-  scraper.search(keyword, 20, (items) => {
-    res.json(items);
-  });
-});
-
-// after a search, load another results page
-app.post('/api/youtube/pages', (req, res) => {
-  var url = req.body.url;
-  scraper.load(url, (items) => {
-     res.json(items);
-  });
-});
-
-// mini proxy: given a videoId, request its video-info and proxies the response (stream) to the caller
-app.get('/api/youtube/proxy/:id', (req, res) => {
-  var id = req.params.id;
-  videoinfo.retrieve(id, (err, data) => {
-    if (err) {
-      var err = new Error('Youtube error');
-      err.status = 404;
-      next(err);
-    }
-    else {
-      var url = data.url_encoded_fmt_stream_map[0].url;
-      logs.log("start streaming " + id + " ...");
-      req.pipe(request(url)).pipe(res); // mini proxy
-    }
+// loads the main page for the given plugin
+app.get('/plugins/:plugin', (req, res) => {
+  logs.debug(req.params.plugin);
+  var route  = './plugins/' + req.params.plugin + '/router';
+  var templatePath = './plugins/' + req.params.plugin + '/template.jade';
+  
+  fs.readFile(templatePath, 'utf8', (err, data) => {
+    if (err) throw err;
+    
+    // render plugin page
+    var jadeFn = jade.compile(data, { filename: templatePath, pretty: true });
+    res.send(jadeFn({}));
   });
 });
 
@@ -135,6 +121,8 @@ app.post('/api/kodi/stream', (req, res) => {
   res.end();
 });
 */
+
+/* :: ROUTES (LOCAL.DB) :::::::::::::::::::::::::::::::::::::::::::::: */
 
 // list nedb items
 app.get('/api/db/list', (req, res) => {
@@ -193,31 +181,6 @@ app.post('/api/db/remove', (req, res) => {
   logs.log("removed item(s) " + item.key + " ...");
 });
 
-// :: ERROR HANDLER ::::::::::::::::::::::::::::::::::::::::::::::::::::::::: //
-
-// 404
-app.use((req, res, next) => {
-  logs.error("* Error 404 * " + util.inspect(req.url));
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
-
-// development
-if (dbg) {
-  app.use((err, req, res, next) => {
-    var errcode = err.status || 500;
-    //logs.error("* Error (dev) "+errcode+" *: " + util.inspect(req));
-    res.send(util.inspect(err));
-  });
-}
-
-// production
-app.use((err, req, res, next) => {
-  var errcode = err.status || 500;
-  res.send(util.inspect(err));
-});
-
 // :: DB ::::::::::::::::::::::::::::::::::::::::::::::::::::::::: //
 
 function initDB() {
@@ -252,4 +215,35 @@ function raiseServer() {
 
 Promise.resolve(true)
   .then(initDB)
+  .then(function() {
+    return pluginManager.load(app);
+  })
+  .then(function(pluginList) { 
+    plugins = pluginList;
+  
+    // :: ERROR HANDLER ::::::::::::::::::::::::::::::::::::::::::::::::::::::::: //
+    // 404
+    app.use((req, res, next) => {
+      logs.error("* Error 404 * " + util.inspect(req.url));
+      var err = new Error('Not Found');
+      err.status = 404;
+      next(err);
+    });
+
+    // development
+    if (dbg) {
+      app.use((err, req, res, next) => {
+        var errcode = err.status || 500;
+        //logs.error("* Error (dev) "+errcode+" *: " + util.inspect(req));
+        res.send(util.inspect(err));
+      });
+    }
+
+    // production
+    app.use((err, req, res, next) => {
+      var errcode = err.status || 500;
+      res.send(util.inspect(err));
+    });
+  
+  })
   .then(raiseServer)

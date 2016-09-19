@@ -17,15 +17,20 @@ $(document).ready(function() {
   
   /* PARTIAL RENDERER */
   
-  $('#browse').on('click', function() {
-    $.get('/browse', function(res) {
-      $('main').html(res);
+  $('a.link').on('click', function(event) {
+    event.preventDefault();
+    
+    // spa partial loader
+    var url = $(this).attr('href');
+    $.get(url, function(data) {
+      $('main').html(data);
       bootstrapInit();
-    }).fail(function() {
-      alert( "error" );
-    })
-  })
-
+    });
+    
+    return false;
+  });
+  
+  /*
   $('#search').on('click', function() {
     $.get('/search', function(res) {
       $('main').html(res);
@@ -35,6 +40,7 @@ $(document).ready(function() {
       alert( "error" );
     })
   });
+  */
   
   /* BUTTON EVENTS */
     
