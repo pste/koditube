@@ -19,6 +19,14 @@ Inside each folder there are its videos. The play button will start streaming th
 
 If you prefer, you can change the koditube url to a custom url (i.e. you can host the web app in the cloud, then make your kodi point to your public url)
 
+## Disclaimer
+
+The whole thing is actually in progress (something like a pre-alpha stage) so ... feel free to:
+- use it without complaining =D
+- open an issue
+- fix an issue
+- suggest some feature
+
 ## Installation
 
 You can build a simple bash script to update the whole thing  ... I've made a deploy.sh this way: 
