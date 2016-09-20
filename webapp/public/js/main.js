@@ -13,6 +13,17 @@ function bootstrapInit() {
 
 /**/
 
+function _postToSrv(url, item) {
+    $.ajax({
+      type: 'POST',
+      data: JSON.stringify(item),
+      contentType: 'application/json',
+      url: url
+    });
+}
+
+/**/
+
 $(document).ready(function() {
   
   /* PARTIAL RENDERER */
@@ -29,19 +40,7 @@ $(document).ready(function() {
     
     return false;
   });
-  
-  /*
-  $('#search').on('click', function() {
-    $.get('/search', function(res) {
-      $('main').html(res);
-      bootstrapInit();
-    })
-    .fail(function() {
-      alert( "error" );
-    })
-  });
-  */
-  
+ 
   /* BUTTON EVENTS */
     
   function onSelectedRows(onRow) {
@@ -52,15 +51,6 @@ $(document).ready(function() {
     
     // reload
     $('#browse').trigger('click');
-  }
-  
-  function _postToSrv(url, item) {
-    $.ajax({
-      type: 'POST',
-      data: JSON.stringify(item),
-      contentType: 'application/json',
-      url: url
-    });
   }
   
   // (browse page) btn open popup delete
@@ -103,7 +93,7 @@ $(document).ready(function() {
     $('#areyousure').modal('toggle');
   });
   
-  // (browse page) add to folder
+  // (browse page) add to tag
   $('main').on('click', '.kttags', function() {
     var tag = $('#kttags-txt').val();
     var uri = '/api/db/save/';
@@ -117,12 +107,11 @@ $(document).ready(function() {
       tags.push(tag);
       
       var item = {
-        key: $row.attr('key'),
+        url: $row.attr('url'),
         tags: tags
       }
       
       _postToSrv(uri, item);
-      //$.post(uri, JSON.stringify(item), 'json');
     });
     
     $('#kttags-dlg').modal('toggle');
@@ -135,26 +124,4 @@ $(document).ready(function() {
     else $btn.addClass('btn-info');
   });
   
-  // (search page) load youtube url
-  $('main').on('click', '.ktplay', function() {
-    var $elem = $(this).children('.fa');
-    window.location = $elem.attr('href');
-  });
-
-  // (search page) add to db
-  $('main').on('click', '.ktadd', function() {
-    var $elem = $(this).children('.fa');
-    var $row = $elem.parents('.row').first();
-    var uri = '/api/db/save/';
-    var item = {
-      "key": $elem.attr('key')
-      , "title": $row.find('.title').text()
-      , "thumb": $row.find('.thumbnail').attr('thumb')
-      , "source": "youtube"
-      , "tags": []
-    };
-
-    _postToSrv(uri, item);
-  });
-
 });

@@ -69,7 +69,7 @@ class KoditubePlugin(object):
         self.log(item)
         li = xbmcgui.ListItem(item['title'])
         li.setThumbnailImage(item['thumb'])
-        path = self.baseurl + "/api/youtube/proxy/" + item['key'];
+        path = self.baseurl + "/plugins/" + item['source'] + "/stream?url=" + item['url']; # /plugins/youtube/stream?url=https://www.youtube.com/watch?v=Fbzl46CuPiM
         xbmcplugin.addDirectoryItem(handle=self.addonHandle, url=path, listitem=li)
     xbmcplugin.endOfDirectory(self.addonHandle)
       

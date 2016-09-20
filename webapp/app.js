@@ -9,14 +9,11 @@ var helmet = require('helmet');
 var pluginManager = require('./pluginManager');
 
 //var favicon = require('serve-favicon');
-//var cookieParser = require('cookie-parser');
 var jade = require('jade');
 var bodyParser = require('body-parser');
 
 // nedb datastore:
 var Datastore = require('nedb');
-
-//var mold = require('./mold');
 
 /* :: GLOBALS :::::::::::::::::::::::::::::::::::::::::::::: */
 
@@ -39,14 +36,14 @@ if (dbg) { // rebind debug function
   logs.debug('^^^ DEBUG MODE ON  ...');
 }
 
-var plugins = [];
-
-/* :::::::::::::::::::::::::::::::::::::::::::::: */
-
 var port = 80; // node app.js --port 4006
 var portidx = process.argv.indexOf('--port') + 1; // 0 is not found
 if (portidx > 0 && portidx < process.argv.length)
   port = process.argv[portidx];
+
+var plugins = [];
+
+/* :::::::::::::::::::::::::::::::::::::::::::::: */
 
 app = express();
 app.set('port', port);
@@ -59,7 +56,6 @@ app.set('view engine', 'jade');
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-//app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(helmet());
@@ -81,7 +77,7 @@ app.get('/browse', (req, res) => {
 
 /* :: ROUTES (API) :::::::::::::::::::::::::::::::::::::::::::::: */
 
-// loads the main page for the given plugin
+// loads the plugin page (template.jade)
 app.get('/plugins/:plugin', (req, res) => {
   logs.debug(req.params.plugin);
   var route  = './plugins/' + req.params.plugin + '/router';
@@ -95,32 +91,6 @@ app.get('/plugins/:plugin', (req, res) => {
     res.send(jadeFn({}));
   });
 });
-
-//
-/* jsonRPC example (actually unused because of the mini proxy)
-app.post('/api/kodi/stream', (req, res) => {
-  var title = req.body.title;
-  var id = req.body.id;
-  var toKODI = {
-    "jsonrpc": "2.0",
-    "method": "Addons.ExecuteAddon",
-    "params":
-    {
-      "addonid": "plugin.video.koditube",
-      "params":
-      {
-        "url":      'http://localhost:' + server.address().port + '/api/youtube/proxy/' + id // I will proxy the youtube request
-        , "title":  title
-      }
-    },
-    "id": 1
-  };
-  
-  logs.debug("id:", id, " title:", title);
-  request.post('http://localhost:8088/jsonrpc', toKODI);
-  res.end();
-});
-*/
 
 /* :: ROUTES (LOCAL.DB) :::::::::::::::::::::::::::::::::::::::::::::: */
 
@@ -162,7 +132,7 @@ app.post('/api/db/save', (req, res) => {
   var newitem = req.body;
   console.log("UPSERTING", newitem);
   
-  db.koditube.findOne({ key: newitem.key }, (err, doc) => {
+  db.koditube.findOne({ url: newitem.url }, (err, doc) => {
     if (err) logs.error("°°° NEDB:" + err);
     if (doc === null) db.koditube.insert(newitem);
     else {
@@ -177,8 +147,8 @@ app.post('/api/db/save', (req, res) => {
 
 app.post('/api/db/remove', (req, res) => {
   var item = req.body;
-  db.koditube.remove({ key: item.key }, { multi: true });
-  logs.log("removed item(s) " + item.key + " ...");
+  db.koditube.remove({ url: item.url }, { multi: true });
+  logs.log("removed item(s) " + item.url + " ...");
 });
 
 // :: DB ::::::::::::::::::::::::::::::::::::::::::::::::::::::::: //
@@ -189,7 +159,7 @@ function initDB() {
     //db.users = new Datastore({ filename: 'users.db', autoload: true });
     logs.debug("°°° NEDB: ready");
     
-    db.koditube.ensureIndex({ fieldName: 'key' }, (err) => {
+    db.koditube.ensureIndex({ fieldName: 'url' }, (err) => {
       if (err) {
         logs.error("°°° NEDB:" + err);
         reject(err);
@@ -218,7 +188,7 @@ Promise.resolve(true)
   .then(function() {
     return pluginManager.load(app);
   })
-  .then(function(pluginList) { 
+  .then(function(pluginList) {
     plugins = pluginList;
   
     // :: ERROR HANDLER ::::::::::::::::::::::::::::::::::::::::::::::::::::::::: //
@@ -245,5 +215,6 @@ Promise.resolve(true)
       res.send(util.inspect(err));
     });
   
+    return Promise.resolve(true);
   })
   .then(raiseServer)

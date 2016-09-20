@@ -13,7 +13,7 @@
         
 #result.container.hidden
   // {{#each . as |item|}}
-  .row(key="{{item.key}}")
+  .row(url="{{item.url}}")
     .col-sm-3
       .thumbnail
         div(style="height:120px; background: url('{{item.thumb}}') center center no-repeat")
@@ -28,7 +28,7 @@
       button.btn.btn-default.ktpin(data-toggle="tooltip", title="click to select")
         span.fa.fa-thumb-tack
       button.btn.btn-default.ktplay(data-toggle="tooltip", title="play")
-        span.fa.fa-play-circle(href="https://www.youtube.com/watch?v={{item.key}}")
+        span.fa.fa-play-circle(href="{{item.url}}")
   // {{/each}}
 
 // TAGS DIALOG

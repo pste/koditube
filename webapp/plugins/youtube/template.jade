@@ -25,7 +25,7 @@
       button.btn.btn-default.ktplay(data-toggle="tooltip", title="play")
         span.fa.fa-2x.fa-play-circle(href="{{item.href}}")
       button.btn.btn-default.ktadd(data-toggle="tooltip", title="add to local db")
-        span.fa.fa-2x.fa-plus-square(key="{{item.key}}")
+        span.fa.fa-2x.fa-plus-square(href="{{item.href}}")
   // {{/each}}
 
 // this will be cloned from the 1st
@@ -38,18 +38,6 @@ script.
   var tmplPages = Handlebars.compile($(".pagination").first().html());
   $("#result").empty().removeClass('hidden');
   $('.pagination').empty().removeClass('hidden');
-
-  /*
-  function fadeOut() {
-    $("#result").hide();
-    $('.pagination').hide();
-  }
-
-  function fadeIn() {
-    $("#result").show();
-    $('.pagination').show();
-  }
-  */
   
   function renderitems(data) {
     $('#result').html(tmplMain(data.items));
@@ -67,7 +55,7 @@ script.
       renderitems(data);
       //fadeIn();
     });
-  });
+  })
 
   // page change
   $('nav').on('click', '.page', function() {
@@ -78,5 +66,27 @@ script.
       renderitems(data);
       //fadeIn();
     });
-  });
+  })
+  
+    // play youtube url
+  $('main').on('click', '.ktplay', function() {
+    var $elem = $(this).children('.fa');
+    window.location = $elem.attr('href');
+  })
+  
+  // (search page) add to db
+  $('main').on('click', '.ktadd', function() {
+    var $elem = $(this).children('.fa');
+    var $row = $elem.parents('.row').first();
+    var uri = '/api/db/save/';  // this is common for each plugin
+    var item = {
+      "title": $row.find('.title').text()
+      , "url": $(this).children('.fa').attr('href')
+      , "thumb": $row.find('.thumbnail').attr('thumb')
+      , "source": "youtube"
+      , "tags": []
+    };
+
+    _postToSrv(uri, item);
+  })
 

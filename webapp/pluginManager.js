@@ -10,9 +10,9 @@ exports.load = function(app) {
           
           // init plugin routes
           var pluginPath = './plugins/' + plugin + '/router';
-          require(pluginPath).init(app);
+          var pluginRouter = require(pluginPath);
+          if (pluginRouter && pluginRouter.init) pluginRouter.init(app);
           console.log('plugins ' + plugin + ' loaded ...');
-          
         }
         resolve(files);
       }
