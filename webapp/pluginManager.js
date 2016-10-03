@@ -1,19 +1,24 @@
 var fs = require('fs');
+var plugins = [];
 
 function tryToLoad(plugin, app) {
-  // init plugin routes
-  var pluginPath = './plugins/' + plugin + '/router.js';
-  fs.stat(pluginPath, (err, stats) => {
-    if (err) {
-      console.log('PluginManager ERROR','Router *' + plugin + '* NOT found (skipped ...)');
-      console.log('PluginManager ERROR', err.message);
-    }
-    else {
-      var pluginRouter = require(pluginPath);
-      if (pluginRouter && pluginRouter.init) pluginRouter.init(app);
-      console.log('PluginManager', '*' + plugin + '* found and loaded.');
-    }
-  });
+  return new Promise((resolve, reject) => {
+    // init plugin routes
+    var pluginPath = './plugins/' + plugin + '/router.js';
+    fs.stat(pluginPath, (err, stats) => {
+      if (err) {
+        console.log('PluginManager ERROR','Router *' + plugin + '* NOT found (skipped ...)');
+        console.log('PluginManager ERROR', err.message);
+        resolve("");
+      }
+      else {
+        var pluginRouter = require(pluginPath);
+        if (pluginRouter && pluginRouter.init) pluginRouter.init(app);
+        console.log('PluginManager', '*' + plugin + '* found and loaded.');
+        resolve(plugin);
+      }
+    });
+  }) // Promise
 }
 
 exports.load = function(app) {
@@ -21,11 +26,15 @@ exports.load = function(app) {
     fs.readdir('plugins', (err, files) => {
       if (err) reject(err);
       else {
+        var p = [];
         for (i in files) {
-          tryToLoad(files[i], app)
+          p.push(tryToLoad(files[i], app));
         }
-        resolve(files);
+        
+        Promise.all(p).then(values => {
+          resolve(values.filter(function(n){ return n != "" }));
+        });
       }
     })
-  })
+  }) // Promise
 }
