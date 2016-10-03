@@ -7,16 +7,24 @@ function tryToLoad(plugin, app) {
     var pluginPath = './plugins/' + plugin + '/router.js';
     fs.stat(pluginPath, (err, stats) => {
       if (err) {
-        console.log('PluginManager ERROR','Router *' + plugin + '* NOT found (skipped ...)');
-        console.log('PluginManager ERROR', err.message);
-        resolve("");
+        console.log('PluginManager ERROR','Router *' + plugin + '* NOT found (skipped ...)\n  ', err.message);
       }
       else {
         var pluginRouter = require(pluginPath);
-        if (pluginRouter && pluginRouter.init) pluginRouter.init(app);
-        console.log('PluginManager', '*' + plugin + '* found and loaded.');
-        resolve(plugin);
+        if (pluginRouter && pluginRouter.init) {
+          try {
+            pluginRouter.init(app);
+            console.log('PluginManager', '*' + plugin + '* found and loaded.');
+            resolve(plugin);
+          }
+          catch(ex) {
+             console.log('PluginManager ERROR','Router *' + plugin + '* init error\n  ', ex);
+          }
+        }
+        else ;
       }
+      
+      resolve(""); // something wrong happened ...
     });
   }) // Promise
 }
