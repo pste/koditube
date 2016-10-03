@@ -84,7 +84,7 @@ $(document).ready(function() {
     onSelectedRows(function($row) {
       var uri = '/api/db/remove/';
       var item = {
-        "key": $row.attr('key')
+        "url": $row.attr('url') // remove by url (it is unique)
       };
       
       _postToSrv(uri, item);

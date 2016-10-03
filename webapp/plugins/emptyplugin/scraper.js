@@ -76,7 +76,7 @@ function parseHTML(document) {
 
     pages.push({
       key: link.textContent.trim()
-      , url: youtube + link.href
+      , href: youtube + link.href
     });
   }
   

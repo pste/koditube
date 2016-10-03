@@ -67,7 +67,7 @@ if (dbg) {
 /* :: ROUTES (VIEWS) :::::::::::::::::::::::::::::::::::::::::::::: */
 
 app.get('/', (req, res) => {
-  logs.debug(util.inspect(plugins));
+  logs.debug("GET /", util.inspect(plugins));
   res.render('main', {items: plugins});
 });
 
